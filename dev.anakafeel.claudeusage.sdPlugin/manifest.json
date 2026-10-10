@@ -1,17 +1,18 @@
 {
   "Name": "Claude Usage",
-  "Description": "Animated ring showing Claude 5-hour and 7-day usage limits. Read-only: never refreshes or writes your credentials.",
-  "Author": "anakafeel",
+  "Description": "Animated ring showing Claude 5-hour and 7-day usage limits. Unofficial; not affiliated with Anthropic. Read-only: never refreshes or writes your credentials.",
+  "URL": "https://github.com/anakafeel/opendeck-claude-usage",
+  "Author": "Saim Hashmi",
   "Version": "1.0.0",
   "Category": "Claude",
   "CategoryIcon": "imgs/plugin",
   "Icon": "imgs/plugin",
   "SDKVersion": 2,
   "Software": { "MinimumVersion": "6.0" },
-  "OS": [{ "Platform": "linux" }, { "Platform": "mac", "MinimumVersion": "12" }, { "Platform": "windows", "MinimumVersion": "10" }],
+  "OS": [{ "Platform": "linux" }],
   "CodePath": "plugin.js",
   "CodePathLin": "run.sh",
-  "Nodejs": { "Version": "20" },
+  "Nodejs": { "Version": "24" },
   "Actions": [
     {
       "Name": "Usage Ring",

@@ -62,7 +62,7 @@ async function poll() {
       headers: {
         Authorization: `Bearer ${cred.token}`,
         "anthropic-beta": "oauth-2025-04-20",
-        "User-Agent": "claude-code/2.1.0",
+        "User-Agent": "opendeck-claude-usage/1.0.0 (+https://github.com/anakafeel/opendeck-claude-usage)",
         Accept: "application/json",
       },
       signal: AbortSignal.timeout(15_000),
