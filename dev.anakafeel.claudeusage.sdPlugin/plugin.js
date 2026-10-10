@@ -116,6 +116,8 @@ const G = {
   A: [4, [[0, 6, 0, 0, 4, 0, 4, 6], [0, 3, 4, 3]]],
   U: [4, [[0, 0, 0, 6, 4, 6, 4, 0]]],
   C: [4, [[4, 0, 0, 0, 0, 6, 4, 6]]],
+  W: [4, [[0, 0, 1, 6, 2, 3, 3, 6, 4, 0]]],
+  F: [4, [[4, 0, 0, 0, 0, 6], [0, 3, 3, 3]]],
   "-": [3, [[0, 3, 3, 3]]],
   ":": [1, [{ dot: [0.5, 1.6] }, { dot: [0.5, 4.4] }]],
   " ": [2, []],
@@ -162,13 +164,15 @@ function levelColor(p) {
 }
 const hsl = ([h, s, l], dl = 0) => `hsl(${h.toFixed(0)},${s.toFixed(0)}%,${Math.max(0, Math.min(100, l + dl)).toFixed(0)}%)`;
 
+// Local wall-clock reset time: "10:20P", or "THU 7P" when it isn't today.
+const DAYS = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
 function fmtReset(ms) {
   if (ms == null) return "";
-  const m = Math.max(0, Math.round((ms - Date.now()) / 60000));
-  if (m < 60) return `${m}M`;
-  const h = Math.floor(m / 60);
-  if (h < 24) return `${h}:${String(m % 60).padStart(2, "0")}`;
-  return `${Math.floor(h / 24)}D${h % 24}H`;
+  const d = new Date(Math.round(ms / 60000) * 60000);
+  const h = d.getHours() % 12 || 12;
+  const min = d.getMinutes();
+  const clock = `${h}${min ? ":" + String(min).padStart(2, "0") : ""}${d.getHours() < 12 ? "A" : "P"}`;
+  return d.toDateString() === new Date().toDateString() ? clock : `${DAYS[d.getDay()]} ${clock}`;
 }
 
 function star(cx, cy, r, rot, color, opacity) {
@@ -206,8 +210,9 @@ function touchGrass(entry, t) {
   s += text("GRASS", 72, 34, 15, "#7ee08a", 3);
   const reset = entry && entry.reset ? fmtReset(entry.reset) : "";
   if (reset) {
-    s += text("RESET IN", 72, 60, 7, "#ffffff", 1.6, 0.55);
-    s += text(reset, 72, 72, 16, CLAUDE, 3);
+    s += text("RESETS AT", 72, 60, 7, "#ffffff", 1.6, 0.55);
+    const h = Math.min(16, (16 * 136) / textWidth(reset, 16));
+    s += text(reset, 72, 72, h, CLAUDE, 3);
   }
   // swaying grass along the bottom
   let blades = "";
@@ -310,14 +315,15 @@ function render(key, t) {
     s += text(msg, C, CY + 4, 14, "#ffffff", 2.6, 0.8);
   }
 
-  // footer: window label + reset countdown
+  // footer: window label + reset clock time (shrinks to fit long "WED 11:59P")
   const reset = entry && entry.reset ? fmtReset(entry.reset) : "";
   const label = key.mode === "5h" ? "5H" : "7D";
   if (reset) {
-    const lw = textWidth(label, 13), rw = textWidth(reset, 13), gap = 9;
+    const fh = Math.min(13, (13 * 128) / (textWidth(label, 13) + 9 + textWidth(reset, 13)));
+    const lw = textWidth(label, fh), rw = textWidth(reset, fh), gap = 9 * (fh / 13);
     const x0 = C - (lw + gap + rw) / 2;
-    s += text(label, x0 + lw / 2, 122, 13, CLAUDE, 2.6);
-    s += text(reset, x0 + lw + gap + rw / 2, 122, 13, "#ffffff", 2.6, 0.9);
+    s += text(label, x0 + lw / 2, 122, fh, CLAUDE, 2.6);
+    s += text(reset, x0 + lw + gap + rw / 2, 122, fh, "#ffffff", 2.6, 0.9);
   } else {
     s += text(label, C, 122, 13, CLAUDE, 2.6);
   }
