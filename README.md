@@ -58,7 +58,15 @@ The plugin reads `~/.claude/.credentials.json` (or `$CLAUDE_CONFIG_DIR/.credenti
 node dev.anakafeel.claudeusage.sdPlugin/plugin.js --preview /tmp/frames
 ```
 
-Writes sample SVG frames (no network).
+Writes sample SVG frames (no network). `scripts/preview.sh` turns them into `docs/preview.png`.
+
+## Releasing
+
+```sh
+scripts/release.sh 1.1.0
+```
+
+Bumps the version in `manifest.json`, tags `v1.1.0`, pushes, and publishes a GitHub release with `dev.anakafeel.claudeusage.sdPlugin.zip`. OpenDeck's plugin store installs from the latest release, so changes reach store users only after a release.
 
 ## License
 
