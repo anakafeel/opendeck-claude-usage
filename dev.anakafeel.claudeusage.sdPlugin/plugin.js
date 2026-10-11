@@ -10,6 +10,7 @@ const os = require("node:os");
 const path = require("node:path");
 
 const ENDPOINT = "https://api.anthropic.com/api/oauth/usage";
+const VERSION = require("./manifest.json").Version;
 const POLL_MS = 90_000;
 const BACKOFF_MS = 300_000;
 const FRAME_MS = 100;
@@ -62,7 +63,7 @@ async function poll() {
       headers: {
         Authorization: `Bearer ${cred.token}`,
         "anthropic-beta": "oauth-2025-04-20",
-        "User-Agent": "opendeck-claude-usage/1.0.0 (+https://github.com/anakafeel/opendeck-claude-usage)",
+        "User-Agent": `opendeck-claude-usage/${VERSION} (+https://github.com/anakafeel/opendeck-claude-usage)`,
         Accept: "application/json",
       },
       signal: AbortSignal.timeout(15_000),
